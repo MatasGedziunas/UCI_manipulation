@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.4.2", features = ["derive"] }
+mlua = { version = "0.5", features = ["lua51"] }
 rust-uci = "0.1.5"
