@@ -16,7 +16,11 @@ pub enum Command {
     /// print the value of your desired section;
     PrintSection { section: String},
     /// create a new section/option in configuration file with different types
-    SetSection { section: String, value: String},
+    SetSection { section: String, type_of_section: String},
     /// delete a section/option in the configuration file;
-    DeleteSection { section: String }
+    DeleteSection { section: String },
+    /// set a value for an option;
+    SetOptionValue { section: String, option: String, value: String},
+    /// delete an option;
+    DeleteOption { section: String, option: String}
 }

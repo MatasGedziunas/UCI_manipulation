@@ -2,6 +2,9 @@ use std::io::{self, Error, Read};
 use std::path::{Path, PathBuf};
 use std::fs;
 
+use crate::lua::LuaContext;
+
+
 
 pub fn list_config_files(dir: &Path) -> Result<Vec<PathBuf>, Error> {
     if (dir.is_dir()) {
@@ -43,4 +46,40 @@ pub fn get_config_file_content(file: &Path) -> Result<String, Error> {
     let mut file: fs::File = get_config_file(file)?;
     file.read_to_string(&mut file_content)?;
     return Ok(file_content);
+}
+
+pub fn get_section_content(section: &str) -> Result<(), mlua::Error>
+{
+    match LuaContext::call_function_in_lua("get_section_content", vec![section.to_string()]){
+        Ok(_) => Ok(()),
+        Err(e) => Err(e),
+    }
+}
+
+pub fn set_section(section: &str, type_of_section: &str) -> Result<(), mlua::Error> {
+    match LuaContext::call_function_in_lua("set_section", vec![section.to_string(), type_of_section.to_string()]){
+        Ok(_) => Ok(()),
+        Err(e) => Err(e),
+    }
+}
+
+pub fn delete_section(section: &str) -> Result<(), mlua::Error> {
+    match LuaContext::call_function_in_lua("delete_section", vec![section.to_string()]){
+        Ok(_) => Ok(()),
+        Err(e) => Err(e),
+    }
+}
+
+pub fn set_option_value(section: &str, option: &str, value: &str) -> Result<(), mlua::Error> {
+    match LuaContext::call_function_in_lua("set_option_value", vec![section.to_string(), option.to_string(), value.to_string()]){
+        Ok(_) => Ok(()),
+        Err(e) => Err(e),
+    }
+}
+
+pub fn delete_option(section: &str, option: &str) -> Result<(), mlua::Error> {
+    match LuaContext::call_function_in_lua("delete_option", vec![section.to_string(), option.to_string()]) {
+        Ok(_) => Ok(()),
+        Err(e) => Err(e),
+    }
 }

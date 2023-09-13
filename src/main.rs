@@ -1,6 +1,6 @@
-use rust_uci::Uci;
 use std::path::Path;
 use std::io::Error;
+
 mod task;
 mod args;
 mod lua;
@@ -8,15 +8,14 @@ mod lua;
 use args::CLIargs;
 use args::Command;
 use clap::Parser;
+use task::*;
 
 
 
 fn main() {
     let args = CLIargs::parse();
     
-    let uci: Uci = Uci::new().unwrap();
     let config_dir: &Path = Path::new("/etc/config");
-    
     match args.command {
         Command::ListConfigFiles => {
             let config_file_paths = task::list_config_files(config_dir);
@@ -41,22 +40,34 @@ fn main() {
             }
         }
         Command::PrintSection { section } => {
-            // match get_section_content(uci, &section){
-            //     Ok(section) => println!("{}", section),
-            //     Err(err) => panic!("{}", err),
-            // }
+            match get_section_content(&section){
+                Ok(()) => (),
+                Err(err) => panic!("{}", err),
+            }
         }
-        Command::SetSection { section, value } => {
-            // match set_section(uci, &section,  &value) {
-            //     Ok(()) => println!("Section value set"),
-            //     Err(err) => panic!("{}", err),
-            // }
+        Command::SetSection { section, type_of_section } => {
+            match set_section(&section, &type_of_section) {
+                Ok(()) => println!("Section value set"),
+                Err(err) => panic!("{}", err),
+            }
         }
         Command::DeleteSection { section } => {
-            // match delete_section(uci, &section){
-            //     Ok(()) => println!("Section deleted"),
-            //     Err(err) => panic!("{}", err),
-            // }
+            match delete_section(&section){
+                Ok(()) => println!("Section deleted"),
+                Err(err) => panic!("{}", err),
+            }
+        }
+        Command::SetOptionValue { section, option, value } => {
+            match set_option_value(&section, &option, &value) {
+                Ok(()) => println!("Option value set"),
+                Err(err) => panic!("{}", err),
+            }
+        }
+        Command::DeleteOption {section, option } => {
+            match delete_option(&section, &option) {
+                Ok(()) => println!("Section deleted"),
+                Err(err) => panic!("{}", err),
+            }
         }
     }
 }
